@@ -113,18 +113,19 @@ class AddressBook(UserDict):
         upcoming_birthdays=[]
      
         for user in self.data:
-            birthday=dt.datetime.strptime(self.data[user].birthday.value, "%d.%m.%Y").date()
+            if self.data.birthday:
+                birthday=dt.datetime.strptime(self.data[user].birthday.value, "%d.%m.%Y").date()
 
-            birthday_this_year=birthday.replace(year=today.year)
-            if birthday_this_year <  today:
-                birthday_this_year=birthday_this_year.replace(year=today.year+1)
-            if 0 <= (birthday_this_year -  today).days < days:
-                if birthday_this_year.weekday() >=5:
-                    days_ahead=0-birthday_this_year.weekday()
-                    days_ahead +=7
-                    birthday_this_year=birthday_this_year+ dt.timedelta(days=days_ahead)
-                congratulation_date_str=birthday_this_year.strftime("%d.%m.%Y")
-            upcoming_birthdays.append({"name":user, "birthday":congratulation_date_str})
+                birthday_this_year=birthday.replace(year=today.year)
+                if birthday_this_year <  today:
+                    birthday_this_year=birthday_this_year.replace(year=today.year+1)
+                if 0 <= (birthday_this_year -  today).days < days:
+                    if birthday_this_year.weekday() >=5:
+                        days_ahead=0-birthday_this_year.weekday()
+                        days_ahead +=7
+                        birthday_this_year=birthday_this_year+ dt.timedelta(days=days_ahead)
+                    congratulation_date_str=birthday_this_year.strftime("%d.%m.%Y")
+                    upcoming_birthdays.append({"name":user, "birthday":congratulation_date_str})
 
         return upcoming_birthdays
 
@@ -197,9 +198,8 @@ def add_birthday(args,book:AddressBook):
     name, birthday, *_ = args
     record = book.find(name)
     if record:
-        record.add_birthday(birthday)
-        mess = "Birthday added."
-        return mess
+        print("Birthday added")
+        return str(record.add_birthday(birthday))
     else:
         return "Contact not found."
         
@@ -218,7 +218,7 @@ def show_birthday(args, book: AddressBook):
     name,*_ = args
     record = book.find(name)
     if record:
-        if record.birthday.value:
+        if record.birthday.value!= None:
             print(f"{record.name}s Birthday: {str(record.birthday.value)}")
         else:
             print(f"I dont know {record.name}s birthday date :(")
@@ -233,7 +233,7 @@ def birthdays(book: AddressBook):
     if upcoming_birthdays:
         print(f"Список іменинників: {upcoming_birthdays}")
     else:
-        return "No upcoming birthdays."
+        print("No upcoming birthdays.")
         
 # Створення нової адресної книги
 
