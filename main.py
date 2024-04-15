@@ -113,9 +113,8 @@ class AddressBook(UserDict):
         upcoming_birthdays=[]
      
         for user in self.data:
-            if self.data.birthday:
+            if self.data:
                 birthday=dt.datetime.strptime(self.data[user].birthday.value, "%d.%m.%Y").date()
-
                 birthday_this_year=birthday.replace(year=today.year)
                 if birthday_this_year <  today:
                     birthday_this_year=birthday_this_year.replace(year=today.year+1)
